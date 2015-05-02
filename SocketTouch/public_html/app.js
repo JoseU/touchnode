@@ -2,10 +2,16 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var desk = "";
-app.listen(80,'192.168.1.14'); //para utilizar una ip
+
+var ipservidorsocket = '192.168.2.8';
+var ipservidorosc   = "192.168.2.8";
+
+app.listen(80,ipservidorsocket); //para utilizar una ip
 var osc = require('node-osc');
 
-var client = new osc.Client('192.168.1.10', 3333);
+
+
+var client = new osc.Client(ipservidorosc, 3333);
 
 //app.listen(80); //para ser usado en local
 function handler (req, res) {
@@ -19,8 +25,7 @@ function handler (req, res) {
 //    res.writeHead(200);
 //    res.end(data);
 //  });
-str =req.rawHeaders[11];
-str1 = str.replace('http://localhost',str);
+
 //console.log(req);
 console.log(req.url);
 //if (str1==='/TouchControl.html'){
