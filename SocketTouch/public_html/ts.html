@@ -107,7 +107,7 @@ function draw() {
 	ship.targetVel.copyFrom(leftVector);
 	ship.targetVel.multiplyEq(0.2);
 	
-	ship.update(); 
+	//ship.update(); 
 	
 	with(ship.pos) {
 		if(x<0) x = canvas.width; 
@@ -116,7 +116,7 @@ function draw() {
 		else if (y>canvas.height) y = 0; 
 	}
 	
-	ship.draw(); 
+	//ship.draw(); 
 	
 	
 	for (var i = 0; i < bullets.length; i++) {
@@ -236,7 +236,7 @@ function onTouchStart(e) {
 			continue; 		
 		} else {
 			socket.emit('my other event', { b:1});
-			makeBullet(); 
+			//makeBullet(); 
 			
 		}	
 	}
