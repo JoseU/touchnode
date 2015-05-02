@@ -1,8 +1,12 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
+var desk = "";
+app.listen(80,'192.168.1.14'); //para utilizar una ip
+var osc = require('node-osc');
 
-app.listen(80,'192.168.2.8'); //para utilizar una ip
+var client = new osc.Client('192.168.1.10', 3333);
+
 //app.listen(80); //para ser usado en local
 function handler (req, res) {
 //  fs.readFile(__dirname + '/socket.html',
@@ -36,11 +40,37 @@ console.log(req.url);
 io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   console.log(socket.id);
+  //io.sockets.connected[socket.id].emit("message", "prueba");
+  
   socket.on('my other event', function (data) {
-    console.log(socket.id);
+    //console.log(socket.id);
     console.log(data);
     
-       socket.broadcast.emit('item', { x: data.x,y:data.y }); 
+    if (data.desk==1){
+    desk=socket.id;
+    }
+    if(desk!==""){
+    io.sockets.connected[desk].emit("message", {id:socket.id, x: data.x,y:data.y ,b:data.b});
+    var msg =  new osc.Message('/address');
+    msg.append(socket.id);
+
+    if(data.x===undefined){
+     data.x=0;   
+    }
+    msg.append(data.x);
+    if(data.y===undefined){
+     data.y=0;   
+    }
+    msg.append(""+data.y);
+    if(data.b===undefined){
+     data.b=0;   
+    }
+    msg.append(""+data.b);
+ 
+// client.send(msg)
+    client.send( msg);
+      }
+         // socket.broadcast.emit('item', {id:socket.id, x: data.x,y:data.y }); 
     
      //
   });

@@ -41,7 +41,7 @@
 <script src="js/jquery.js"></script>
 
 <script>
-var socket = io('http://localhost');
+var socket = io('http://192.168.1.14');
 var xs;
 var ys;
 var canvas,
@@ -152,9 +152,7 @@ function draw() {
 				c.strokeStyle = "cyan"; 
 				c.arc(leftTouchPos.x, leftTouchPos.y, 40, 0,Math.PI*2, true); 
 				c.stroke(); 
-                                xs=Math.round(touch.clientX-leftTouchStartPos.x);
-                                ys= Math.round(touch.clientY-leftTouchStartPos.y);
-				$("#lg").html((xs)+","+(ys));
+                                
 			} else {
 				
 				c.beginPath(); 
@@ -166,13 +164,12 @@ function draw() {
 				c.lineWidth = "6";
 				c.arc(touch.clientX, touch.clientY, 40, 0, Math.PI*2, true); 
 				c.stroke();
-                                xs=0;
-                                ys=0;
-                                $("#lg").html((xs)+","+(ys));
+                               
+                                
 			}
 		}
 	} else {
-		
+		 
 		c.fillStyle	 = "white"; 
 		c.fillText("mouse : "+mouseX+", "+mouseY, mouseX, mouseY); 
 		
@@ -236,7 +233,7 @@ function onTouchStart(e) {
 			leftVector.reset(0,0); 
 			continue; 		
 		} else {
-			
+			socket.emit('my other event', { b:1});
 			makeBullet(); 
 			
 		}	
@@ -256,6 +253,10 @@ function onTouchMove(e) {
 			leftVector.copyFrom(leftTouchPos); 
 			leftVector.minusEq(leftTouchStartPos); 	
                         //$("#lg").html(leftVector);
+                        xs=Math.round(touch.clientX-leftTouchStartPos.x);
+                                ys= Math.round(touch.clientY-leftTouchStartPos.y);
+				$("#lg").html((xs)+","+(ys));
+                                socket.emit('my other event', {x: xs, y: ys});
 			break; 		
 		}		
 	}
@@ -272,6 +273,10 @@ function onTouchEnd(e) {
 		var touch =e.changedTouches[i]; 
 		if(leftTouchID == touch.identifier)
 		{
+                    xs=0;
+                                ys=0;
+                                $("#lg").html((xs)+","+(ys));
+                                socket.emit('my other event', {x: xs, y: ys});
 			leftTouchID = -1; 
 			leftVector.reset(0,0); 
 			break; 		
